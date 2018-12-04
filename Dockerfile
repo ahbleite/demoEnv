@@ -1,4 +1,4 @@
-FROM registry.hub.docker.com/library/golang:1.10-alpine3.7 as build-env
+FROM registry.hub.docker.com/library/golang:1.10-alpine3.7
 RUN apk update && apk add --no-cache git
 WORKDIR /source
 ADD . /source
