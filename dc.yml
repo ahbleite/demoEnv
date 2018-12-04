@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  name: brgdemoapp
+  labels:
+    app: brgdemoapp
+    group: brgdemoapp
+spec:
+  triggers: []
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: brgdemoapp
+        group: brgdemoapp
+    spec:
+      containers:
+      - name: brgdemoapp
+        image: 172.30.186.243:5000/scheduall/brgdemoapp:latest
+        ports:
+        - name: http
+          containerPort: 9999
+          protocol: TCP
+        env:
+        - name: TZ
+          value: America/Sao_Paulo
+        resources:
+          limits:
+            memory: 512Mi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 9999
+            scheme: HTTP
+          initialDelaySeconds: 180
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 9999
+            scheme: HTTP
+          initialDelaySeconds: 10
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        imagePullPolicy: Always
