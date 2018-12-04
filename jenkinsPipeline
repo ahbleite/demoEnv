@@ -8,7 +8,7 @@ pipeline {
             steps {
                 script {									
                     def namespace  = "${env.NAMESPACE}";
-                    def appName = 'brgDemo';
+                    def appName = 'brgdemoapp';
 				
 					stage ('Checking out source code') {
 						git branch: 'master', url: 'https://github.com/ahbleite/demoEnv.git';
