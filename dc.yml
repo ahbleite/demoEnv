@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: brgdemoapp
-        image: brgdemoapp:latest
+        image: 172.30.186.243:5000/XXNAMESPACEXX/brgdemoapp:latest
         ports:
         - name: http
           containerPort: 9999
