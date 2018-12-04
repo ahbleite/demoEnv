@@ -56,6 +56,8 @@ pipeline {
 								if(openshift.selector("route", "${appName}-${namespace}-external").exists()){
 									echo ">>>>>>Deleting route ${appName}-${namespace}-external";
 									openshift.selector("route", "${appName}-${namespace}-external").delete();
+									echo ">>>>>>Deleting route ${appName}-${namespace}-internal";
+									openshift.selector("route", "${appName}-${namespace}-internal").delete();
 								}
 
 								//create service
