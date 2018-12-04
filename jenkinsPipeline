@@ -56,8 +56,13 @@ pipeline {
 								if(openshift.selector("route", "${appName}-${namespace}-external").exists()){
 									echo ">>>>>>Deleting route ${appName}-${namespace}-external";
 									openshift.selector("route", "${appName}-${namespace}-external").delete();
+
 									echo ">>>>>>Deleting route ${appName}-${namespace}-internal";
 									openshift.selector("route", "${appName}-${namespace}-internal").delete();
+
+									echo ">>>>>>Deleting service ${appName}-${namespace}-internal";
+									openshift.selector("service", "${appName}-${namespace}-internal").delete();
+
 								}
 
 								//create service
@@ -65,7 +70,7 @@ pipeline {
 								def dcApp = openshift.selector("dc", "${appName}")
 
 								echo ">>>>>>Exposing app service"
-								dcApp.expose(" --port=9999 --name=${appName}")
+								dcApp.expose(" --port=9999 --name=${appName}-${namespace}")
 
 								//create external route
 								echo ">>>>>>Provisioning HTTPS route"
