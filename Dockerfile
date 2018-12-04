@@ -4,8 +4,5 @@ WORKDIR /source
 ADD . /source
 RUN go get -d -v
 RUN cd /source && go build -o /go/bin/main
-
-FROM registry.hub.docker.com/library/nginx:1.15.7-alpine
-COPY --from=build-env /go/bin/main /go/bin/main
 EXPOSE 9999
 ENTRYPOINT ["/go/bin/main"]
