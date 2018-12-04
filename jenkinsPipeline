@@ -1,0 +1,102 @@
+pipeline {
+    agent none
+    stages {
+        stage('Deploying') {
+            agent {
+                label 'maven'
+            }
+            steps {
+                script {									
+                    def namespace  = "${env.NAMESPACE}";
+                    def appName = 'brgDemo';
+				
+					stage ('Checking out source code') {
+						git branch: 'master', url: 'https://github.com/ahbleite/demoEnv.git';
+					}
+									
+					script{
+						echo 'Building docker image'
+						openshift.withCluster() {
+							openshift.withProject(namespace) {
+
+								if(!openshift.selector("bc", "${appName}-bc").exists()){
+									openshift.newBuild("--binary --name=${appName}-bc -l app=${appName} --to=${appName}:latest");
+								}
+								openshift.startBuild("${appName}-bc --from-dir=. --follow");
+
+                                def commit
+                                catchError {
+                                    commit =  sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+                                }
+
+                                //TODO: Pegar o valor da última TAG ou da TAG do commit
+								openshift.tag("${appName}:latest ${appName}:${commit}")
+							}
+						}
+					}
+
+					stage('Creating Deployment Config') {
+						openshift.withCluster() {
+							openshift.withProject(namespace) {
+								if(!openshift.selector("dc", "${appName}").exists()){
+									echo ">>>>>>Creating DC";
+									openshift.create(readFile("${WORKSPACE}/dc.yml"));
+								}else{
+									echo ">>>>>>Updating DC";
+									openshift.replace(readFile("${WORKSPACE}/dc.yml"));
+								}
+							}
+						}	
+					}
+				
+					stage('Provisioning Route and Services') {
+						openshift.withCluster() {
+							openshift.withProject(namespace) {				
+								//Deleting route and services
+								if(openshift.selector("route", "${appName}-${namespace}-external").exists()){
+									echo ">>>>>>Deleting route ${appName}-${namespace}-external";
+									openshift.selector("route", "${appName}-${namespace}-external").delete();
+								}
+
+								//create service
+								echo ">>>>>>Provisioning services"
+								def dcApp = openshift.selector("dc", "${appName}")
+
+								echo ">>>>>>Exposing app service"
+								dcApp.expose(" --port=9999 --name=${appName}")
+
+								//create external route
+								echo ">>>>>>Provisioning HTTPS route"
+								openshift.create("route", "edge ${appName}-${namespace}-external --service=${appName} --hostname=${appName}-${namespace}.2d1f.gsat-corp.openshiftapps.com --insecure-policy=None");
+								openshift.selector("route", "${appName}-${namespace}-external").label([route: 'external']);
+								
+								//create internal route
+								echo ">>>>>>Provisioning HTTPS route"
+								openshift.create("route", "edge ${appName}-${namespace}-internal --service=${appName} --hostname=${appName}-${namespace}.151f.gsat-corp.openshiftapps.com --insecure-policy=None");
+							}
+						}
+					}
+
+					stage('Deploying Application UAT environment') {
+						openshift.withCluster() {
+							openshift.withProject(namespace) {
+								def dc = openshift.selector("dc", "${appName}");
+								def ro = dc.rollout();
+								def result = ro.latest();
+								echo ">>>>>>Operation output: ${result.out}";
+								
+								def latestDeploymentVersion = openshift.selector('dc',"${appName}").object().status.latestVersion;
+								def rc = openshift.selector("rc", "${appName}-${latestDeploymentVersion}")
+								rc.untilEach(1){
+									def rcMap = it.object();
+									return (rcMap.status.replicas.equals(rcMap.status.readyReplicas));
+								}
+							}
+						}
+					}				
+				
+                }
+            }    
+        }
+	}
+}
