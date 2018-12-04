@@ -74,12 +74,12 @@ pipeline {
 
 								//create external route
 								echo ">>>>>>Provisioning HTTPS route"
-								openshift.create("route", "edge ${appName}-${namespace}-external --service=${appName} --hostname=${appName}-${namespace}.2d1f.gsat-corp.openshiftapps.com --insecure-policy=None");
+								openshift.create("route", "edge ${appName}-${namespace}-external --service=${appName}-${namespace} --hostname=${appName}-${namespace}.2d1f.gsat-corp.openshiftapps.com --insecure-policy=None");
 								openshift.selector("route", "${appName}-${namespace}-external").label([route: 'external']);
 								
 								//create internal route
 								echo ">>>>>>Provisioning HTTPS route"
-								openshift.create("route", "edge ${appName}-${namespace}-internal --service=${appName} --hostname=${appName}-${namespace}.151f.gsat-corp.openshiftapps.com --insecure-policy=None");
+								openshift.create("route", "edge ${appName}-${namespace}-internal --service=${appName}-${namespace} --hostname=${appName}-${namespace}.151f.gsat-corp.openshiftapps.com --insecure-policy=None");
 							}
 						}
 					}
