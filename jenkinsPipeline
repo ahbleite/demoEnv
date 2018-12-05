@@ -11,7 +11,7 @@ pipeline {
                     def appName = 'brgdemoapp';
 				
 					stage ('Checking out source code') {
-						git branch: 'master', url: 'https://github.com/ahbleite/demoEnv.git';
+						git branch: "${env.BRANCH_NAME}", url: 'https://github.com/ahbleite/demoEnv.git';
 					}
 									
 					script{
