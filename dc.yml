@@ -24,6 +24,11 @@ spec:
         env:
         - name: TZ
           value: America/Sao_Paulo
+        - name: ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              name: environment
+              key: ENVIRONMENT
         resources:
           limits:
             memory: 512Mi
