@@ -10,7 +10,7 @@ import (
 
 func home(w http.ResponseWriter, r *http.Request) {
     w.WriteHeader(http.StatusOK)
-    fmt.Fprintf(w, "Ambiente: %v\n", os.Getenv("ENVIRONMENT"))
+    fmt.Fprintf(w, "Ambiente: %v\nGO ninja GO!!", os.Getenv("ENVIRONMENT"))
 }
 
 func health(w http.ResponseWriter, r *http.Request) {
