@@ -9,6 +9,7 @@ pipeline {
                 script {									
                     def namespace  = "${env.NAMESPACE}";
                     def appName = 'brgdemoapp';
+                    def commit;
 				
 					stage ('Checking out source code') {
 						git branch: "${env.BRANCH_NAME}", url: 'https://github.com/ahbleite/demoEnv.git';
@@ -24,7 +25,6 @@ pipeline {
 								}
 								openshift.startBuild("${appName}-bc --from-dir=. --follow");
 
-                                def commit
                                 catchError {
                                     commit =  sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
                                 }
