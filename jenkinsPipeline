@@ -40,10 +40,10 @@ pipeline {
 							openshift.withProject(namespace) {
 								if(!openshift.selector("dc", "${appName}").exists()){
 									echo ">>>>>>Creating DC";
-									openshift.create(readFile("${WORKSPACE}/dc.yml").replace("XXNAMESPACEXX", namespace));
+									openshift.create(readFile("${WORKSPACE}/dc.yml").replace("[[VERSION]]", commit));
 								}else{
 									echo ">>>>>>Updating DC";
-									openshift.replace(readFile("${WORKSPACE}/dc.yml").replace("XXNAMESPACEXX", namespace));
+									openshift.replace(readFile("${WORKSPACE}/dc.yml").replace("[[VERSION]]", commit));
 								}
 							}
 						}	

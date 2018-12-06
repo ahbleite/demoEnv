@@ -14,9 +14,11 @@ spec:
         app: brgdemoapp
         group: brgdemoapp
     spec:
+      serviceAccount:
+      serviceAccountName:
       containers:
       - name: brgdemoapp
-        image: 172.30.186.243:5000/XXNAMESPACEXX/brgdemoapp:latest
+        image: brgdemoapp:[[VERSION]]
         ports:
         - name: http
           containerPort: 9999
