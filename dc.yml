@@ -6,7 +6,15 @@ metadata:
     app: brgdemoapp
     group: brgdemoapp
 spec:
-  triggers: []
+  triggers:
+  - type: ImageChange
+    imageChangeParams:
+      automatic: true
+      containerNames:
+      - "brgdemoapp"
+      from:
+        kind: ImageStreamTag
+        name: brgdemoapp:[[VERSION]]
   replicas: 1
   template:
     metadata:
@@ -16,15 +24,6 @@ spec:
     spec:
       strategy:
         type: Recreate
-      triggers:
-      - type: ImageChange
-        imageChangeParams:
-          automatic: true
-          containerNames:
-          - "brgdemoapp"
-          from:
-            kind: ImageStreamTag
-            name: brgdemoapp:[[VERSION]]
       serviceAccount:
       serviceAccountName:
       containers:
