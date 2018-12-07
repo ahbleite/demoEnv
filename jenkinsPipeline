@@ -88,6 +88,16 @@ pipeline {
 						}
 					}
 
+					stage('Waiting user acceptance'){
+						steps {
+							script {
+								timeout(time: 3, unit: 'DAYS') {
+									input(id: 'userInput', message: 'Você deseja fazer o deploy de produção?')
+								}
+							}
+						}
+					}
+
 					stage('Deploying Application UAT environment') {
 						openshift.withCluster() {
 							openshift.withProject(namespace) {
