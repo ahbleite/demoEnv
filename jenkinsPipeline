@@ -93,7 +93,7 @@ pipeline {
 						openshift.withCluster() {
 							openshift.withProject(namespace) {
 								openshift.selector("dc", "${appName}").rollout();
-								timeout(time: 2, unit: 'SECONDS') {
+								timeout(time: 5, unit: 'SECONDS') {
 									openshift.selector("dc",  appName).related('pods').untilEach(1) {
 										return (it.object().status.phase == "Running")
 									}
