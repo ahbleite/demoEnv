@@ -19,7 +19,7 @@ spec:
       serviceAccountName:
       containers:
       - name: brgdemoapp
-        image: 172.30.186.243:5000/[[NAMESPACE]]/brgdemoapp:[[VERSION]]
+        image: 172.30.186.243:5000/[[NAMESPACE]]/brgdemoapp:latest
         ports:
         - name: http
           containerPort: 9999

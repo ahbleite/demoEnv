@@ -31,6 +31,7 @@ pipeline {
 
                                 //TODO: Pegar o valor da última TAG ou da TAG do commit
 								openshift.tag("${appName}:latest ${appName}:${commit}")
+
 							}
 						}
 					}
@@ -40,10 +41,10 @@ pipeline {
 							openshift.withProject(namespace) {
 								if(!openshift.selector("dc", "${appName}").exists()){
 									echo ">>>>>>Creating DC";
-									openshift.create(readFile("${WORKSPACE}/dc.yml").replace("[[VERSION]]", commit).replace("[[NAMESPACE]]", namespace));
+									openshift.create(readFile("${WORKSPACE}/dc.yml").replace("[[NAMESPACE]]", namespace));
 								}else{
 									echo ">>>>>>Updating DC";
-									openshift.replace(readFile("${WORKSPACE}/dc.yml").replace("[[VERSION]]", commit).replace("[[NAMESPACE]]", namespace));
+									openshift.replace(readFile("${WORKSPACE}/dc.yml").replace("[[NAMESPACE]]", namespace));
 								}
 							}
 						}	
