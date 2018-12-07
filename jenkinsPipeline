@@ -92,7 +92,7 @@ pipeline {
 						steps {
 							script {
 								timeout(time: 3, unit: 'DAYS') {
-									input(id: 'userInput', message: 'Você deseja fazer o deploy de produção?')
+									input 'Você deseja fazer o deploy de produção?'
 								}
 							}
 						}
