@@ -89,11 +89,9 @@ pipeline {
 					}
 
 					stage('Waiting user acceptance'){
-						steps {
-							script {
-								timeout(time: 3, unit: 'DAYS') {
-									input 'Você deseja fazer o deploy de produção?'
-								}
+						script {
+							timeout(time: 3, unit: 'DAYS') {
+								input 'Você deseja fazer o deploy de produção?'
 							}
 						}
 					}
