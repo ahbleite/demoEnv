@@ -89,23 +89,15 @@ pipeline {
 						}
 					}
 
-					stage('Waiting user acceptance'){
-						script {
-							timeout(time: 3, unit: 'DAYS') {
-								input 'Você deseja fazer o deploy de produção?'
-							}
-						}
-					}
-
 					stage('Deploying Application UAT environment') {
 						openshift.withCluster() {
 							openshift.withProject(namespace) {
-								timeout(5) { 
+								openshift.selector("dc", "${appName}").rollout();
+								timeout(time: 2, unit: 'SECONDS') {
 									openshift.selector("dc",  appName).related('pods').untilEach(1) {
 										return (it.object().status.phase == "Running")
 									}
 								}
-
 							}
 						}
 					}				
