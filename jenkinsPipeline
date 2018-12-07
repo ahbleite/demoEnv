@@ -40,10 +40,10 @@ pipeline {
 							openshift.withProject(namespace) {
 								if(!openshift.selector("dc", "${appName}").exists()){
 									echo ">>>>>>Creating DC";
-									openshift.create(readFile("${WORKSPACE}/dc.yml").replace("[[VERSION]]", commit));
+									openshift.create(readFile("${WORKSPACE}/dc.yml").replace("[[VERSION]]", commit).replace("[[NAMESPACE]]", commit));
 								}else{
 									echo ">>>>>>Updating DC";
-									openshift.replace(readFile("${WORKSPACE}/dc.yml").replace("[[VERSION]]", commit));
+									openshift.replace(readFile("${WORKSPACE}/dc.yml").replace("[[VERSION]]", commit).replace("[[NAMESPACE]]", commit));
 								}
 							}
 						}	
@@ -73,6 +73,7 @@ pipeline {
 								echo ">>>>>>Provisioning services"
 								def dcApp = openshift.selector("dc", "${appName}")
 
+								echo ">>>>>>Exposing app service"
 								echo ">>>>>>Exposing app service"
 								dcApp.expose(" --port=9999 --name=${appName}-${namespace}")
 

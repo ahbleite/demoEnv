@@ -19,7 +19,7 @@ spec:
       serviceAccountName:
       containers:
       - name: brgdemoapp
-        image: brgdemoapp:[[VERSION]]
+        image: 172.30.186.243:5000/[[NAMESPACE]]/brgdemoapp:[[VERSION]]
         ports:
         - name: http
           containerPort: 9999
@@ -56,12 +56,3 @@ spec:
           successThreshold: 1
           failureThreshold: 3
         imagePullPolicy: Always
-  triggers:
-  - type: ImageChange
-    imageChangeParams:
-      automatic: false
-      containerNames:
-      - "brgdemoapp"
-      from:
-        kind: ImageStreamTag
-        name: brgdemoapp:[[VERSION]]
