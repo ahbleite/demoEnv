@@ -59,7 +59,7 @@ spec:
   triggers:
   - type: ImageChange
     imageChangeParams:
-      automatic: false
+      automatic: true
       containerNames:
       - "brgdemoapp"
       from:
