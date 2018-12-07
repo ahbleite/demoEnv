@@ -91,17 +91,12 @@ pipeline {
 					stage('Deploying Application UAT environment') {
 						openshift.withCluster() {
 							openshift.withProject(namespace) {
-								def dc = openshift.selector("dc", "${appName}");
-								def ro = dc.rollout();
-								def result = ro.latest();
-								echo ">>>>>>Operation output: ${result.out}";
-								
-								def latestDeploymentVersion = openshift.selector('dc',"${appName}").object().status.latestVersion;
-								def rc = openshift.selector("rc", "${appName}-${latestDeploymentVersion}")
-								rc.untilEach(1){
-									def rcMap = it.object();
-									return (rcMap.status.replicas.equals(rcMap.status.readyReplicas));
+								timeout(5) { 
+									openshift.selector("dc",  appName).related('pods').untilEach(1) {
+										return (it.object().status.phase == "Running")
+									}
 								}
+
 							}
 						}
 					}				
