@@ -44,7 +44,7 @@ pipeline {
 							if(!openshift.selector("bc", "${appName}-bc").exists()){
 								openshift.newBuild("--binary --name=${appName}-bc -l app=${appName} --to=${appName}:latest");
 							}
-							openshift.startBuild("${appName}-bc --from-dir=. --follow");
+							openshift.startBuild("${appName}-bc --from-dir=. --follow").logs("-f");
 
 							catchError {
 								commit =  sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
