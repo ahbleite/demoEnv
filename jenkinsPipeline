@@ -1,9 +1,8 @@
 pipeline {
-    agent none
-    stages {
-		agent {
-			label 'maven'
-		}
+	agent {
+		label 'maven'
+	}
+	stages{
 		steps {
 			script {									
 				def namespace  = "${env.NAMESPACE}";
