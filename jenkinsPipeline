@@ -1,12 +1,11 @@
+def namespace  = "${env.NAMESPACE}";
+def appName = 'brgdemoapp';
+def commit;
+
 pipeline {
 	agent {
 		label 'maven'
 	}									
-	script{
-		def namespace  = "${env.NAMESPACE}";
-		def appName = 'brgdemoapp';
-		def commit;
-	}
 	stages{					
 		stage ('Checking out source code') {
 			git branch: "${env.BRANCH_NAME}", url: 'https://github.com/ahbleite/demoEnv.git';
