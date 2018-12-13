@@ -34,7 +34,7 @@ pipeline {
 		}
 		
 			
-		stage('Creating Deployment Config') {
+		stage('Building image') {
 			steps{
 				script{
 					echo 'Building docker image'
