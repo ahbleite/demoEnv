@@ -56,7 +56,7 @@ spec:
           successThreshold: 1
           failureThreshold: 3
         imagePullPolicy: Always
-          triggers:	
+  triggers:	
   - type: ImageChange	
     imageChangeParams:	
       automatic: false	
