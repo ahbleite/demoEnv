@@ -17,17 +17,19 @@ pipeline {
 
 		stage('Creating Deployment Config') {
 			steps{
-				openshift.withCluster() {
-					openshift.withProject(namespace) {
-						if(!openshift.selector("dc", "${appName}").exists()){
-							echo ">>>>>>Creating DC";
-							openshift.create(readFile("${WORKSPACE}/dc.yml"));
-						}else{
-							echo ">>>>>>Updating DC";
-							openshift.replace(readFile("${WORKSPACE}/dc.yml"));
+				script{
+					openshift.withCluster() {
+						openshift.withProject(namespace) {
+							if(!openshift.selector("dc", "${appName}").exists()){
+								echo ">>>>>>Creating DC";
+								openshift.create(readFile("${WORKSPACE}/dc.yml"));
+							}else{
+								echo ">>>>>>Updating DC";
+								openshift.replace(readFile("${WORKSPACE}/dc.yml"));
+							}
 						}
 					}
-				}	
+				}
 			}
 		}
 		
@@ -57,7 +59,6 @@ pipeline {
 		}
 	
 		stage('Provisioning Route and Services') {
-			
 			steps{
 				openshift.withCluster() {
 					openshift.withProject(namespace) {				
