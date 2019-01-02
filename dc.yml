@@ -57,11 +57,4 @@ spec:
           failureThreshold: 3
         imagePullPolicy: Always
   triggers:	
-  - type: ImageChange	
-    imageChangeParams:	
-      automatic: false	
-      containerNames:	
-      - "brgdemoapp"	
-      from:	
-        kind: ImageStreamTag	
-        name: brgdemoapp:latest
+  - type: ""
