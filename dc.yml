@@ -6,7 +6,8 @@ metadata:
     app: brgdemoapp
     group: brgdemoapp
 spec:
-  triggers:	[]
+  triggers:	
+    - type: "ConfigChange"
   replicas: 1
   template:
     metadata:
