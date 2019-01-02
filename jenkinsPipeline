@@ -12,27 +12,7 @@ pipeline {
 			steps{
 				git branch: "${env.BRANCH_NAME}", url: 'https://github.com/ahbleite/demoEnv.git';
 			}
-		}
-		
-
-		stage('Creating Deployment Config') {
-			steps{
-				script{
-					openshift.withCluster() {
-						openshift.withProject(namespace) {
-							if(!openshift.selector("dc", "${appName}").exists()){
-								echo ">>>>>>Creating DC";
-								openshift.create(readFile("${WORKSPACE}/dc.yml").replace("[[NAMESPACE]]", namespace));
-							}else{
-								echo ">>>>>>Updating DC";
-								openshift.replace(readFile("${WORKSPACE}/dc.yml").replace("[[NAMESPACE]]", namespace));
-							}
-						}
-					}
-				}
-			}
-		}
-		
+		}		
 			
 		stage('Building image') {
 			steps{
@@ -96,6 +76,25 @@ pipeline {
 							//create internal route
 							echo ">>>>>>Provisioning HTTPS route"
 							openshift.create("route", "edge ${appName}-${namespace}-internal --service=${appName}-${namespace} --hostname=${appName}-${namespace}.151f.gsat-corp.openshiftapps.com --insecure-policy=None");
+						}
+					}
+				}
+			}
+		}
+		
+
+		stage('Creating Deployment Config') {
+			steps{
+				script{
+					openshift.withCluster() {
+						openshift.withProject(namespace) {
+							if(!openshift.selector("dc", "${appName}").exists()){
+								echo ">>>>>>Creating DC";
+								openshift.create(readFile("${WORKSPACE}/dc.yml").replace("[[NAMESPACE]]", namespace));
+							}else{
+								echo ">>>>>>Updating DC";
+								openshift.replace(readFile("${WORKSPACE}/dc.yml").replace("[[NAMESPACE]]", namespace));
+							}
 						}
 					}
 				}
